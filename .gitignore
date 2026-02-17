@@ -1,0 +1,8 @@
+# Chezmoi locl state
+.chezmoidata/
+.chezmoistate/
+chezmoi.db
+
+# OS specific temporary files
+.DS_Store
+Thumbs.db
