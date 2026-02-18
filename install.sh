@@ -1,18 +1,13 @@
 #!/bin/bash
-
 set -euo pipefail
 
 SOURCE="https://github.com/joelabreurojas/dotfiles.git"
 
-if command -v chezmoi >/dev/null; then
-	chezmoi init --apply $SOURCE
-	exit 0
+if ! command -v mise >/dev/null; then
+	curl -fsSL https://mise.jdx.dev/install.sh | sh
+	export PATH="$HOME/.local/share/mise/bin:$PATH"
 fi
 
-if command -v mise >/dev/null; then
-	mise use -g chezmoi && mise exec chezmoi -- chezmoi init --apply $SOURCE
-	exit 0
-fi
+mise use -q -g chezmoi && mise exec chezmoi -- chezmoi init --apply "$SOURCE"
 
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $SOURCE
-exit 0
+exec "$SHELL"

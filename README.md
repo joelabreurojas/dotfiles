@@ -31,7 +31,7 @@
 **Linux (Lubuntu)**
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/joelabreurojas/dotfiles/main/install.sh)"
+curl -fsSL https://raw.githubusercontent.com/joelabreurojas/dotfiles/main/install.sh | bash
 ```
 
 **Windows 10-11**
