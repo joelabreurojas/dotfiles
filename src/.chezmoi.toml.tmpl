@@ -19,6 +19,14 @@
     os_id = {{ $os_id | quote }}
     ephemeral = {{ $ephemeral }}
 
+    [data.packages]
+        linux = [
+            "git", "build-essential", "unzip", "jq", "zsh", "ripgrep"
+        ]
+        windows = [
+            "Git.Git", "Microsoft.PowerShell", "BurntSushi.ripgrep", "sharkdp.fd"
+        ]
+
 [bitwarden]
     command = "bw"
     {{- if not $ephemeral }}
