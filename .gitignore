@@ -6,3 +6,6 @@ chezmoi.db
 # OS specific temporary files
 .DS_Store
 Thumbs.db
+
+# Other
+*.tmp
