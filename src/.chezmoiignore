@@ -3,6 +3,7 @@ install.sh
 install.ps1
 .git/
 .gitignore
+**/.gitkeep
 
 {{ if ne .chezmoi.os "windows" }}
 AppData/
