@@ -1,0 +1,19 @@
+README.md
+install.sh
+install.ps1
+.git/
+.gitignore
+
+{{ if ne .chezmoi.os "windows" }}
+AppData/
+Documents/
+.chezmoiscripts/windows/
+{{- end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.bashrc
+.zshrc
+.config/mpd/
+.config/lxqt/
+.chezmoiscripts/linux/
+{{- end }}
