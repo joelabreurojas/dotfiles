@@ -1,0 +1,22 @@
+#!/bin/bash
+{{ template "bash_helpers" . -}}
+set -euo pipefail
+
+{{ if .is_remote -}}
+log_info "Remote environment detected. Skipping Bitwarden setup."
+exit 0
+{{- end }}
+
+STATUS=$(bw status 2>/dev/null | jq -r .status || echo "missing")
+
+if [[ "$STATUS" == "missing" ]]; then
+    log_error "Bitwarden CLI not found or not responding."
+    exit 1
+fi
+
+if [[ "$STATUS" == "unauthenticated" ]]; then
+    log_working "Bitwarden is not authenticated. Login required."
+    bw login
+fi
+
+log_success "Bitwarden is authenticated."
