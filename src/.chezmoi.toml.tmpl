@@ -3,15 +3,16 @@
 {{-     $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
-{{- $isWindows := eq .chezmoi.os "windows" -}}
-{{- $ephemeral := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "GITPOD_WORKSPACE_ID") $isWindows -}}
+{{- $isWork := eq .chezmoi.hostname "PC-0024" -}}
+
+{{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (stat "/.dockerenv") -}}
 
 [data]
     name = "Joel Abreu Rojas"
-    email = {{ $isWindows | ternary "joelabreurojas@transmandu.com" "joelabreurojas@gmail.com" | quote }}
-    osid = {{ $osID | quote }}
-    is_windows = {{ $isWindows }}
-    ephemeral = {{ $ephemeral }}
+    email = {{ $isWork | ternary "joelabreurojas@transmandu.com" "joelabreurojas@gmail.com" | quote }}
+    os_id = {{ $osID | quote }}
+    is_work = {{ $isWork }}
+    is_remote = {{ $isRemote }}
 
 [data.packages]
     linux = ["curl", "git", "build-essential", "unzip", "jq", "zsh", "ripgrep", "fd-find", "subversion"]
@@ -19,18 +20,16 @@
 
 [bitwarden]
     command = "bw"
-    {{ if not $ephemeral }}unlock = "auto"{{ end }}
+    {{ if not $isRemote }}unlock = "auto"{{ end }}
 
 [edit]
     apply = true
 
-{{- if not $ephemeral }}
 [git]
-    autoCommit = true
-    autoPush = true
-{{- end }}
+    autoCommit = {{ not $isRemote }}
+    autoPush = {{ and (not $isWork) (not $isRemote) }}
 
-{{- if $isWindows }}
+{{- if eq .chezmoi.os "windows" -}}
 [interpreters.ps1]
     command = "pwsh"
     args = ["-NoLogo"]
