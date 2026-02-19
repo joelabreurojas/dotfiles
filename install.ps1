@@ -1,5 +1,4 @@
 {{ template "pwsh_helpers" . }}
-
 $ErrorActionPreference = "Stop"
 $ProgressPreference = 'SilentlyContinue'
 

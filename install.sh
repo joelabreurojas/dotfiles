@@ -1,7 +1,5 @@
 #!/bin/bash
-
 {{ template "bash_helpers" . }}
-
 set -euo pipefail
 
 SOURCE="https://github.com/joelabreurojas/dotfiles.git"
