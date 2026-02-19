@@ -12,7 +12,7 @@ if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
 
 Log-Working "Setting up chezmoi..."
 & mise use -g -q chezmoi *> $null
-& mise exec chezmoi -- chezmoi init --apply -q $SOURCE *> $null
+& mise exec chezmoi -- chezmoi init --apply $SOURCE *> $null
 
 Log-Success "Dotfiles applied!"
 

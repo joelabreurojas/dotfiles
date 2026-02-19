@@ -12,7 +12,7 @@ fi
 
 log_working "Setting up chezmoi..."
 mise use -g -q chezmoi >/dev/null 2>&1
-mise exec chezmoi -- chezmoi init --apply -q "$SOURCE"
+mise exec chezmoi -- chezmoi init --apply "$SOURCE"
 
 log_success "Dotfiles applied!"
 exec "$SHELL"
