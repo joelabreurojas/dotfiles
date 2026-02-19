@@ -1,0 +1,44 @@
+[user]
+	name = {{ .name | quote }}
+	email = {{ .email | quote }}
+
+[init]
+	defaultBranch = main
+
+[core]
+	autocrlf = {{ if eq .chezmoi.os "windows" }}true{{ else }}input{{ end }}
+	editor = nvim
+    fsmonitor = true
+
+[pull]
+	rebase = true
+
+[push]
+    default = simple
+    autoSetupRemote = true
+
+[url "git@github.com:{{ .username }}/"]
+    insteadOf = https://github.com/{{ .username }}/
+
+[alias]
+    changes = status -s -b
+    find = "!f() { git log -S \"$1\"; }; f"
+    last = log -1 HEAD --stat
+    nope = !git reset --hard && git clean -df
+    publish = !git pull --rebase && git push
+    prune = "!f() { git branch --merged ${1:-main} | grep -vE '^\\*|main|master' | xargs -r git branch -d; }; f"
+    retake = commit --amend --no-edit
+    tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    undo = "!f() { git reset --soft HEAD~${1:-1}; }; f"
+    wip = !git add -A && git commit -m 'WIP: Work in progress'
+    where = branch -vv
+
+{{ if .is_work -}}
+[includeIf "gitdir:**/work/**"]
+    path = ~/.gitconfig_work
+{{- end }}
+
+{{ if not .is_remote -}}
+[credential]
+    helper = {{ .is_work | ternary "manager" "cache --timeout=3600" }}
+{{- end }}

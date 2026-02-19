@@ -9,10 +9,12 @@
 
 [data]
     name = "Joel Abreu Rojas"
-    email = {{ $isWork | ternary "joelabreurojas@transmandu.com" "joelabreurojas@gmail.com" | quote }}
+    username = {{ $isWork | ternary "JAR-Transmandu" "joelabreurojas" | quote }}
+    email = {{ $isWork | ternary "jabreu@transmandu.com" "joelabreurojas@gmail.com" | quote }}
     os_id = {{ $osID | quote }}
     is_work = {{ $isWork }}
     is_remote = {{ $isRemote }}
+    ssh_keys = ["id_ed25519", "id_ed25519_work"]
 
 [data.packages]
     linux = ["curl", "git", "build-essential", "unzip", "jq", "zsh", "ripgrep", "fd-find", "subversion"]
