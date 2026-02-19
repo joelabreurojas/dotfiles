@@ -1,0 +1,4 @@
+log_info()    { echo -e "  \033[1;34mℹ️\033[0m  $1"; }
+log_success() { echo -e "  \033[1;32m✅\033[0m  $1"; }
+log_working() { echo -e "  \033[1;33m🚧\033[0m  $1"; }
+log_error()   { echo -e "  \033[1;31m❌\033[0m  $1"; }

@@ -1,3 +1,5 @@
+{{ template "pwsh_helpers" . }}
+
 # packages hash: {{ .packages.windows | toJson | sha256sum }}
 
 $packages = @(
@@ -6,15 +8,14 @@ $packages = @(
 {{- end }}
 )
 
-Write-Host "📦 Syncing system packages (winget)..." -ForegroundColor Cyan
+Log-Working "Syncing system packages (winget)..."
 
 foreach ($id in $packages) {
-    $is_installed = winget list --id $id -e --accept-source-agreements
-    
+    $null = winget list --id $id -e --accept-source-agreements
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "📥 Installing $id..." -ForegroundColor Yellow
+        Log-Info "Installing $id..."
         & winget install --id $id -e --source winget --silent --accept-source-agreements --accept-package-agreements *> $null
     }
 }
 
-Write-Host "✅ System packages sync complete." -ForegroundColor Green
+Log-Success "System packages sync complete."

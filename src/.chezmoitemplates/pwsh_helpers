@@ -1,0 +1,4 @@
+function Log-Info    ($msg) { Write-Host "  ℹ️  $msg" -ForegroundColor Blue }
+function Log-Success ($msg) { Write-Host "  ✅  $msg" -ForegroundColor Green }
+function Log-Working ($msg) { Write-Host "  🚧  $msg" -ForegroundColor Yellow }
+function Log-Error   ($msg) { Write-Host "  ❌  $msg" -ForegroundColor Red }
