@@ -1,0 +1,17 @@
+#!/bin/bash
+# packages hash: {{ .packages.linux | toJson | sha256sum }}
+set -euo pipefail
+
+{{ $packages := .packages.linux -}}
+{{ $sudo := "sudo " -}}
+{{ if eq .chezmoi.username "root" -}}
+{{   $sudo = "" -}}
+{{ end -}}
+
+echo "📦 Installing system packages (apt)..."
+export DEBIAN_FRONTEND=noninteractive
+
+{{ $sudo }}apt-get update -qq
+{{ $sudo }}apt-get install -y -qq {{ $packages | join " " }} > /dev/null
+
+echo "✅ System packages installed."

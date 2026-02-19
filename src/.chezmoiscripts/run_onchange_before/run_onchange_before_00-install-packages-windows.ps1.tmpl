@@ -1,0 +1,20 @@
+# packages hash: {{ .packages.windows | toJson | sha256sum }}
+
+$packages = @(
+{{- range .packages.windows }}
+    "{{ . }}",
+{{- end }}
+)
+
+Write-Host "📦 Syncing system packages (winget)..." -ForegroundColor Cyan
+
+foreach ($id in $packages) {
+    $is_installed = winget list --id $id -e --accept-source-agreements
+    
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "📥 Installing $id..." -ForegroundColor Yellow
+        & winget install --id $id -e --source winget --silent --accept-source-agreements --accept-package-agreements *> $null
+    }
+}
+
+Write-Host "✅ System packages sync complete." -ForegroundColor Green

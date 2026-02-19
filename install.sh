@@ -4,10 +4,14 @@ set -euo pipefail
 SOURCE="https://github.com/joelabreurojas/dotfiles.git"
 
 if ! command -v mise >/dev/null; then
-	curl -fsSL https://mise.jdx.dev/install.sh | sh
-	export PATH="$HOME/.local/share/mise/bin:$PATH"
+	echo "⚡ Installing mise..."
+	(curl -fsSL https://mise.jdx.dev/install.sh | sh) >/dev/null 2>&1
+	export PATH="$HOME/.local/bin:$HOME/.local/share/mise/bin:$PATH"
 fi
 
-mise use -q -g chezmoi && mise exec chezmoi -- chezmoi init --apply "$SOURCE"
+echo "📦 Setting up chezmoi..."
+mise use -g -q chezmoi >/dev/null 2>&1
+mise exec chezmoi -- chezmoi init --apply -q "$SOURCE"
 
+echo "✅ Dotfiles applied!"
 exec "$SHELL"
