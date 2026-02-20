@@ -1,4 +1,4 @@
-{{ template "pwsh_helpers" . }}
+{{ template "pwsh_loggers" . }}
 # packages hash: {{ .packages.windows | toJson | sha256sum }}
 
 $packages = @(

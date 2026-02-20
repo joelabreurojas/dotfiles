@@ -1,5 +1,5 @@
 #!/bin/bash
-{{ template "bash_helpers" . }}
+{{ template "bash_loggers" . }}
 # packages hash: {{ .packages.linux | toJson | sha256sum }}
 
 set -euo pipefail
