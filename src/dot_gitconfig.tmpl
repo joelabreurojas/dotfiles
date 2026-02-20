@@ -1,17 +1,17 @@
 [user]
-	name = {{ .name | quote }}
-	email = {{ .email | quote }}
+    name = {{ .name | quote }}
+    email = {{ .email | quote }}
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [core]
-	autocrlf = {{ if eq .chezmoi.os "windows" }}true{{ else }}input{{ end }}
-	editor = nvim
+    autocrlf = {{ if eq .chezmoi.os "windows" }}true{{ else }}input{{ end }}
+    editor = nvim
     fsmonitor = true
 
 [pull]
-	rebase = true
+    rebase = true
 
 [push]
     default = simple
@@ -20,16 +20,43 @@
 [url "git@github.com:{{ .username }}/"]
     insteadOf = https://github.com/{{ .username }}/
 
+[color "decorate"]
+    branch = red
+    remoteBranch = red
+    tag = blue
+    HEAD = red
+
+[color "branch"]
+    current = yellow
+    upstream = red
+
+[color "diff"]
+    meta = yellow
+    frag = blue
+
+[color "interactive"]
+    prompt = blue
+    header = yellow
+    help = red
+
+[color "status"]
+    branch = yellow
+
 [alias]
+    aliases = "!git config --get-regexp '^alias\\.' | sed 's/^alias\\.//;s/ / = /' | awk -F ' = ' 'BEGIN {printf \"\\033[34m%-10s %s\\033[0m\\n\", \"COMMAND\", \"DEFINITION\"} {printf \"\\033[33m%-10s\\033[0m %s\\n\", $1, $2}'"
+    branches = branch --sort=-committerdate --format='%(color:yellow)%(refname:short)%(color:reset) %(color:green)(%(committerdate:relative))%(color:reset) - %(contents:subject)'
     changes = status -s -b
-    find = "!f() { git log -S \"$1\"; }; f"
-    last = log -1 HEAD --stat
+    find = "!f() { git log -S \"$1\" --pretty=format:'%C(yellow)%h%Creset - %s %C(green)(%cr)%Creset'; }; f"
+    grave = reflog show --pretty=format:'%C(green)(%ch)%Creset %s - %C(yellow)%h%Creset'
+    last = log -1 HEAD --stat --format='%C(yellow)Commit: %h%Creset%n%C(blue)Author: %an%Creset%n%C(green)Date:   %ad%Creset%n%n%s' --date=rfc
     nope = !git reset --hard && git clean -df
-    publish = !git pull --rebase && git push
-    prune = "!f() { git branch --merged ${1:-main} | grep -vE '^\\*|main|master' | xargs -r git branch -d; }; f"
+    prune = "!f() { git branch --merged ${1:-main} | grep -vE '^\\*|\\b(main|master)\\b' | xargs -r git branch -d; }; f"
+    publish = !git pull --rebase --autostash && git push
     retake = commit --amend --no-edit
-    tree = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    staged = diff --cached
+    tree = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(red)%d%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset' --abbrev-commit
     undo = "!f() { git reset --soft HEAD~${1:-1}; }; f"
+    unstage = restore --staged
     wip = !git add -A && git commit -m 'WIP: Work in progress'
     where = branch -vv
 
