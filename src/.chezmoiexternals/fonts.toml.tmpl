@@ -1,0 +1,11 @@
+{{- if not .is_remote }}
+{{- $fontDir := (eq .chezmoi.os "windows") | ternary "AppData/Local/Microsoft/Windows/Fonts" ".local/share/fonts" -}}
+
+["{{ $fontDir }}/FiraCode"]
+    type = "archive"
+    url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
+    exact = true
+    refreshPeriod = "168h"
+    # Only extract the essentials to save space
+    include = ["*Regular.ttf", "*Bold.ttf", "*Retina.ttf"]
+{{- end }}

@@ -1,0 +1,26 @@
+{{- if eq .chezmoi.os "windows" -}}
+{{ template "pwsh_loggers" . }}
+
+$FontFolder = "$HOME\AppData\Local\Microsoft\Windows\Fonts"
+$RegPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
+
+if (-not (Test-Path $FontFolder)) {
+    Log-Info "Font folder not found. Skipping registration."
+    exit 0
+}
+
+Log-Working "Registering fonts in Windows Registry..."
+
+$Fonts = Get-ChildItem -Path $FontFolder -Include *.ttf, *.otf -Recurse
+
+foreach ($Font in $Fonts) {
+    $ValueName = "$($Font.BaseName) (TrueType)"
+    
+    if (-not (Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue)) {
+        Log-Info "Registering: $($Font.Name)"
+        New-ItemProperty -Path $RegPath -Name $ValueName -Value $Font.Name -PropertyType String | Out-Null
+    }
+}
+
+Log-Success "Font registration complete."
+{{- end }}
