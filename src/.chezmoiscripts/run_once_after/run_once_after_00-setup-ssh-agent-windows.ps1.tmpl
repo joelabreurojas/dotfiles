@@ -1,0 +1,30 @@
+{{- if eq .chezmoi.os "windows" -}}
+{{ template "pwsh_loggers" . }}
+
+Log-Working "Configuring Windows SSH Agent Service..."
+
+$sshAgent = Get-Service -Name ssh-agent -ErrorAction SilentlyContinue
+
+if ($null -eq $sshAgent) {
+    Log-Error "SSH Agent service not found. Ensure OpenSSH Client is installed."
+    exit 1
+}
+
+if ($sshAgent.Status -ne 'Running' -or $sshAgent.StartType -ne 'Automatic') {
+    try {
+        Set-Service -Name ssh-agent -StartupType Automatic
+        Start-Service -Name ssh-agent
+        Log-Success "SSH Agent service is now active and set to Automatic."
+    } catch {
+        Log-Error "Admin rights needed for Service configuration. Run PS as Admin once."
+    }
+
+
+$keys = @("$HOME\.ssh\id_ed25519", "$HOME\.ssh\id_ed25519_work")
+foreach ($key in $keys) {
+    if (Test-Path $key) {
+        Log-Info "Adding key: $key"
+        ssh-add $key 2>$null
+    }
+}
+{{- end }}}
