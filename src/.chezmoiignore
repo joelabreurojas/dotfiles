@@ -18,3 +18,10 @@ Documents/
 .config/lxqt/
 .chezmoiscripts/linux/
 {{- end }}
+
+{{ if .is_work -}}
+dot_config/nvim/lua/config/
+dot_config/nvim/lua/plugins/
+{{ else -}}
+dot_config/git/config_work.tmpl
+{{- end }}

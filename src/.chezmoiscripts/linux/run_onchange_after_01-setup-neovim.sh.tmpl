@@ -1,0 +1,17 @@
+#!/bin/bash
+# Config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }}
+# Lockfile hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+
+{{ template "bash_loggers" . }}
+set -euo pipefail
+
+log_working "Syncing Mise runtimes..."
+mise install -y
+
+log_working "Installing Tree-sitter CLI..."
+mise exec rust -- cargo install tree-sitter-cli
+
+log_working "Syncing Neovim plugins..."
+nvim --headless "+Lazy! sync" +qa
+
+log_success "Neovim setup complete!"

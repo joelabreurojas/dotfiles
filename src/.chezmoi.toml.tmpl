@@ -22,8 +22,14 @@
     ssh_keys = ["id_ed25519", "id_ed25519_work"]
 
 [data.packages]
-    linux = ["curl", "git", "build-essential", "unzip", "jq", "zsh", "ripgrep", "fd-find", "subversion"]
-    windows = ["Git.Git", "Microsoft.PowerShell", "BurntSushi.ripgrep", "sharkdp.fd"]
+    linux = [
+        "build-essential", "cmake", "unzip", "curl", "git", "ripgrep", "fd-find", 
+        "zoxide", "lazygit", "python3-pip", "python3-venv", "libstdc++6"
+    ]
+    windows = [
+        "Git.Git", "Microsoft.PowerShell", "BurntSushi.ripgrep", "sharkdp.fd",
+        "JesseDuffield.lazygit", "LLVM.LLVM", "GnuWin32.Make", "cmake.install"
+    ]
 
 [bitwarden]
     command = "bw"

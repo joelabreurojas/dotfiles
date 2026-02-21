@@ -1,0 +1,9 @@
+[tools]
+node = "latest"
+rust = "latest"
+python = "latest"
+usage = "latest"
+
+[settings]
+autoinstall = true
+lockfile = true

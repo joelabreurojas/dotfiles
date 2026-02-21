@@ -1,0 +1,21 @@
+{{- if .is_work }}
+[".config/nvim"]
+    type = "archive"
+    url = "https://github.com/Ayamir/nvimdots/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
+
+[".config/nvim/lua/user"]
+    type = "git-repo"
+    url = "https://github.com/joelabreurojas/nvimdots-user.git"
+    refreshPeriod = "168h"
+{{- else }}
+[".config/nvim"]
+    type = "archive"
+    url = "https://github.com/LazyVim/starter/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
+    exclude = ["**/options.lua"]
+{{- end }}

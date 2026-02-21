@@ -1,0 +1,16 @@
+# Config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }}
+# Lockfile hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+
+{{ template "pwsh_loggers" . }}
+$ErrorActionPreference = "Stop"
+
+Log-Working "Syncing Mise runtimes..."
+& mise install -y
+
+Log-Working "Installing Tree-sitter CLI..."
+& mise exec rust -- cargo install tree-sitter-cli
+
+Log-Working "Syncing Neovim plugins..."
+& nvim --headless "+Lazy! sync" +qa
+
+Log-Success "Neovim setup complete!"
