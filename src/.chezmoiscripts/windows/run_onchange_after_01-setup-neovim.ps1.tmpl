@@ -1,5 +1,7 @@
 # Config hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
+{{- if stat (joinPath .chezmoi.sourceDir "dot_config/mise/mise.lock") }}
 # Lockfile hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+{{- end }}
 
 {{ template "pwsh_loggers" . }}
 $ErrorActionPreference = "Stop"
