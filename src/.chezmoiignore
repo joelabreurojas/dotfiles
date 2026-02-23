@@ -19,9 +19,6 @@ Documents/
 .chezmoiscripts/linux/
 {{- end }}
 
-{{ if eq .profile "work" -}}
-dot_config/nvim/lua/config/
-dot_config/nvim/lua/plugins/
-{{ else -}}
+{{ if ne .profile "work" -}}
 dot_config/git/config_work.tmpl
 {{- end }}
