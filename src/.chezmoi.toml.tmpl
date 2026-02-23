@@ -3,7 +3,7 @@
 {{-     $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
-{{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (stat "/.dockerenv") -}}
+{{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (not (not (stat "/.dockerenv"))) -}}
 
 {{- $isWSL := (and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft")) -}}
 
