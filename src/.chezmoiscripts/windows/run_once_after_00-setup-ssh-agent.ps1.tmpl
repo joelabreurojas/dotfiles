@@ -2,7 +2,6 @@
 {{ template "pwsh_loggers" . }}
 
 Log-Working "Configuring Windows SSH Agent Service..."
-
 $sshAgent = Get-Service -Name ssh-agent -ErrorAction SilentlyContinue
 
 if ($null -eq $sshAgent) {

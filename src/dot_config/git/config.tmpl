@@ -60,12 +60,12 @@
     wip = !git add -A && git commit -m 'WIP: Work in progress'
     where = branch -vv
 
-{{ if .is_work -}}
+{{ if eq .profile "work" -}}
 [includeIf "gitdir:**/work/**"]
     path = ~/.config/git/config_work
 {{- end }}
 
-{{ if not .is_remote -}}
+{{ if ne .profile "minimal" -}}
 [credential]
-    helper = {{ .is_work | ternary "manager" "cache --timeout=3600" }}
+    helper = {{ eq .profile "work" | ternary "manager" "cache --timeout=3600" }}
 {{- end }}

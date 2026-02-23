@@ -1,4 +1,4 @@
-{{- if .is_work }}
+{{- if eq .profile "work" }}
 [".config/nvim"]
     type = "archive"
     url = "https://github.com/Ayamir/nvimdots/archive/refs/heads/main.tar.gz"

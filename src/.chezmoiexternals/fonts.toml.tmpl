@@ -1,4 +1,4 @@
-{{- if not .is_remote }}
+{{- if ne .profile "minimal" -}}
 {{- $fontDir := (eq .chezmoi.os "windows") | ternary "AppData/Local/Microsoft/Windows/Fonts" ".local/share/fonts" -}}
 
 ["{{ $fontDir }}/FiraCode"]

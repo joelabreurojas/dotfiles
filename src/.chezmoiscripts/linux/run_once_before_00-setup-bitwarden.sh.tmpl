@@ -2,8 +2,8 @@
 {{ template "bash_loggers" . -}}
 set -euo pipefail
 
-{{ if .is_remote -}}
-log_info "Remote environment detected. Skipping Bitwarden setup."
+{{ if eq .profile "minimal" -}}
+log_info "Minimal profile detected. Skipping Bitwarden setup."
 exit 0
 {{- end }}
 

@@ -1,4 +1,4 @@
-# Config hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }}
+# Config hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
 # Lockfile hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
 
 {{ template "pwsh_loggers" . }}

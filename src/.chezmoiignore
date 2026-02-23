@@ -19,7 +19,7 @@ Documents/
 .chezmoiscripts/linux/
 {{- end }}
 
-{{ if .is_work -}}
+{{ if eq .profile "work" -}}
 dot_config/nvim/lua/config/
 dot_config/nvim/lua/plugins/
 {{ else -}}

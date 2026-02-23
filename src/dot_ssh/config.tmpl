@@ -8,6 +8,6 @@ Host github.com-work
     HostName ssh.github.com
     User git
     AddKeysToAgent yes
-    IdentityFile ~/.ssh/{{ index .ssh_keys 1 }}
+    IdentityFile ~/.ssh/{{ index .ssh_keys -1 }}
     Port 443
 {{- end }}

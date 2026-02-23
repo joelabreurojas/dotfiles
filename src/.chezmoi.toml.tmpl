@@ -3,23 +3,38 @@
 {{-     $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
-{{- $isWork := eq .chezmoi.hostname "PC-0024" -}}
-
 {{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (stat "/.dockerenv") -}}
 
 {{- $isWSL := (and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft")) -}}
 
 {{- $isHeadless := or $isRemote $isWSL -}}
 
+{{- $profile := "minimal" -}}
+{{- if eq .chezmoi.hostname "PC-0024" -}}
+{{-     $profile = "work" -}}
+{{- else if (not $isRemote) -}}
+{{-     $profile = "personal" -}}
+{{- end -}}
+
+{{- $username := eq $profile "work" | ternary "JAR-Transmandu" "joelabreurojas" -}}
+
+{{- $email := eq $profile "work" | ternary "jabreu@transmandu.com" "joelabreurojas@gmail.com" -}}
+
+{{- $ssh_keys := list -}}
+{{- if eq $profile "personal" -}}
+{{-     $ssh_keys = list "id_ed25519" -}}
+{{- else if eq $profile "work" -}}
+{{-     $ssh_keys = list "id_ed25519" "id_ed25519_work" -}}
+{{- end -}}
+
 [data]
-    name = "Joel Abreu Rojas"
-    username = {{ $isWork | ternary "JAR-Transmandu" "joelabreurojas" | quote }}
-    email = {{ $isWork | ternary "jabreu@transmandu.com" "joelabreurojas@gmail.com" | quote }}
     os_id = {{ $osID | quote }}
-    is_work = {{ $isWork }}
-    is_remote = {{ $isRemote }}
     is_headless = {{ $isHeadless }}
-    ssh_keys = ["id_ed25519", "id_ed25519_work"]
+    profile = {{ $profile | quote }}
+    name = "Joel Abreu Rojas"
+    username = {{ $username | quote }}
+    email = {{ $email | quote }}
+    ssh_keys = {{ $ssh_keys | toJson }}
 
 [data.packages]
     linux = [
@@ -33,14 +48,14 @@
 
 [bitwarden]
     command = "bw"
-    {{ if not $isRemote }}unlock = "auto"{{ end }}
+    {{ if eq $profile "personal" }}unlock = "auto"{{ end }}
 
 [edit]
     apply = true
 
 [git]
-    autoCommit = {{ not $isRemote }}
-    autoPush = {{ and (not $isWork) (not $isRemote) }}
+    autoCommit = {{ ne $profile "minimal" }}
+    autoPush = {{ eq $profile "personal" }}
 
 {{- if eq .chezmoi.os "windows" -}}
 [interpreters.ps1]
