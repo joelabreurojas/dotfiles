@@ -1,0 +1,13 @@
+#!/bin/bash
+{{ template "bash_loggers" . }}
+
+log_work "Environment Check for {{ .name }}"
+log_info "Profile:  {{ .profile }}"
+log_info "Email:    {{ .email }}"
+log_info "Headless: {{ .is_headless }}"
+
+{{ if eq .profile "minimal" -}}
+log_info "Minimal profile detected. No secrets will be synced."
+{{- else -}}
+log_info "Trusted profile detected ({{ .profile }}). Ready for full setup."
+{{- end }}
