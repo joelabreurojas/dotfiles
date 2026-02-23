@@ -1,2 +1,4 @@
+{{- if .ssh_keys -}}
 [core]
-    sshCommand = "ssh -i ~/.ssh/{{ index .ssh_keys -1 }}"
+    sshCommand = "ssh -i ~/.ssh/{{ index .ssh_keys 1 }}"
+{{- end -}}
