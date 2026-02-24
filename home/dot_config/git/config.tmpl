@@ -47,17 +47,18 @@
     branches = branch --sort=-committerdate --format='%(color:yellow)%(refname:short)%(color:reset) %(color:green)(%(committerdate:relative))%(color:reset) - %(contents:subject)'
     changes = status -s -b
     find = "!f() { git log -S \"$1\" --pretty=format:'%C(yellow)%h%Creset - %s %C(green)(%cr)%Creset'; }; f"
-    grave = reflog show --pretty=format:'%C(green)(%ch)%Creset %s - %C(yellow)%h%Creset'
+    grave = "!f() { { git fsck --unreachable 2>/dev/null | grep commit | cut -d ' ' -f3; git reflog show --format='%H' | git rev-list --stdin --not --all; } | sort -u | xargs -r git log --no-walk --color=always --pretty=format:'%C(green)(%ch)%Creset %s - %C(yellow)%h%Creset' | grep -vE 'WIP on|index on|On main: mise'; }; f"
     last = log -1 HEAD --stat --format='%C(yellow)Commit: %h%Creset%n%C(blue)Author: %an%Creset%n%C(green)Date:   %ad%Creset%n%n%s' --date=rfc
     nope = !git reset --hard && git clean -df
     prune = "!f() { git branch --merged ${1:-main} | grep -vE '^\\*|\\b(main|master)\\b' | xargs -r git branch -d; }; f"
     publish = !git pull --rebase --autostash && git push
+    resurrect = "!f() { git checkout -b \"resurrected-$1\" \"$1\"; }; f"
     retake = commit --amend --no-edit
     staged = diff --cached
     tree = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(red)%d%Creset %s %C(green)(%cr)%Creset %C(blue)<%an>%Creset' --abbrev-commit
     undo = "!f() { git reset --soft HEAD~${1:-1}; }; f"
     unstage = restore --staged
-    wip = !git add -A && git commit -m 'WIP: Work in progress'
+    wip = "!f() { git add -A && git commit -m \"wip: ${1:-work in progress}\"; }; f"
     where = branch -vv
 
 {{ if eq .profile "work" -}}
