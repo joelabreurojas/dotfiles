@@ -9,6 +9,7 @@
     autocrlf = {{ if eq .chezmoi.os "windows" }}true{{ else }}input{{ end }}
     editor = nvim
     fsmonitor = true
+    untrackedCache = true
 
 [pull]
     rebase = true
@@ -68,5 +69,5 @@
 
 {{ if ne .profile "minimal" -}}
 [credential]
-    helper = {{ eq .profile "work" | ternary "manager" "cache --timeout=3600" }}
+    helper = {{ eq .chezmoi.os "windows" | ternary "manager" "cache --timeout=3600" }}
 {{- end }}
