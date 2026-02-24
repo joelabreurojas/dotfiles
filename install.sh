@@ -1,18 +1,17 @@
 #!/bin/bash
-{{ template "bash_helpers" . }}
 set -euo pipefail
 
 SOURCE="https://github.com/joelabreurojas/dotfiles.git"
 
-if ! command -v mise >/dev/null; then
-	log_working "Installing mise..."
-	(curl -fsSL https://mise.jdx.dev/install.sh | sh) >/dev/null 2>&1
-	export PATH="$HOME/.local/bin:$HOME/.local/share/mise/bin:$PATH"
+if command -v chezmoi >/dev/null; then
+	chezmoi init --apply $SOURCE
+	exit 0
 fi
 
-log_working "Setting up chezmoi..."
-mise use -g -q chezmoi >/dev/null 2>&1
-mise exec chezmoi -- chezmoi init --apply "$SOURCE"
+if command -v mise >/dev/null; then
+	mise use -g -q && chezmoi init --apply $SOURCE
+	exit 0
+fi
 
-log_success "Dotfiles applied!"
-exec "$SHELL"
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $SOURCE
+exit 0
