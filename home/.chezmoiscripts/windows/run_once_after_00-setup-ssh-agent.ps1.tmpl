@@ -11,19 +11,25 @@ if ($null -eq $sshAgent) {
 
 if ($sshAgent.Status -ne 'Running' -or $sshAgent.StartType -ne 'Automatic') {
     try {
-        Set-Service -Name ssh-agent -StartupType Automatic
-        Start-Service -Name ssh-agent
+        Set-Service -Name ssh-agent -StartupType Automatic -ErrorAction Stop
+        Start-Service -Name ssh-agent -ErrorAction Stop
         Log-Success "SSH Agent service is now active and set to Automatic."
     } catch {
         Log-Error "Admin rights needed for Service configuration. Run PS as Admin once."
     }
+}
 
+{{ $ssh_keys := .ssh_keys -}}
+$keys = @(
+{{- range $ssh_keys }}
+    "$HOME\.ssh\{{ . }}",
+{{- end }}
+)
 
-$keys = @("$HOME\.ssh\id_ed25519", "$HOME\.ssh\id_ed25519_work")
 foreach ($key in $keys) {
     if (Test-Path $key) {
         Log-Info "Adding key: $key"
         ssh-add $key 2>$null
     }
 }
-{{- end }}}
+{{- end }}
