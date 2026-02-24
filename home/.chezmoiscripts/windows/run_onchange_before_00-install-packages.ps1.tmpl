@@ -1,8 +1,9 @@
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_loggers" . -}}
 # packages hash: {{ .packages.windows | toJson | sha256sum }}
 
+{{ $packages := .packages.windows -}}
 $packages = @(
-{{- range .packages.windows }}
+{{- range $packages }}
     "{{ . }}",
 {{- end }}
 )
@@ -10,11 +11,21 @@ $packages = @(
 Log-Working "Syncing system packages (winget)..."
 
 foreach ($id in $packages) {
-    $null = winget list --id $id -e --accept-source-agreements
+    winget list --id $id -e --accept-source-agreements > $null 2>&1
+    
     if ($LASTEXITCODE -ne 0) {
         Log-Info "Installing $id..."
-        & winget install --id $id -e --source winget --silent --accept-source-agreements --accept-package-agreements *> $null
+        & winget install --id $id -e --source winget --silent --accept-source-agreements --accept-package-agreements | Out-Null
+        
+        if ($LASTEXITCODE -eq 0) {
+            Log-Success "Successfully installed $id"
+        } else {
+            Log-Error "Failed to install $id (Exit Code: $LASTEXITCODE)"
+        }
     }
 }
+
+Log-Working "Refreshing environment variables..."
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 Log-Success "System packages sync complete."
