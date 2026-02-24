@@ -1,8 +1,8 @@
 #!/bin/bash
-{{ template "bash_loggers" . -}}
+{{- template "bash_loggers" . -}}
 set -euo pipefail
 
-{{ if eq .profile "minimal" -}}
+{{- if eq .profile "minimal" -}}
 log_info "Minimal profile detected. Skipping Bitwarden setup."
 exit 0
 {{- end }}
@@ -14,9 +14,17 @@ if [[ "$STATUS" == "missing" ]]; then
     exit 1
 fi
 
-if [[ "$STATUS" == "unauthenticated" ]]; then
-    log_working "Bitwarden is not authenticated. Login required."
-    bw login
+if [[ "$STATUS" == "unauthenticated" || "$STATUS" == "locked" ]]; then
+    log_info "Bitwarden is $STATUS."
+
+    {{- if .is_headless -}}
+    log_error "Cannot interactively resolve in headless environment."
+    exit 1
+    {{- end }}
+
+    [[ "$STATUS" == "unauthenticated" ]] && bw login
+    [[ "$STATUS" == "locked" ]] && export BW_SESSION=$(bw unlock --raw)
+
 fi
 
-log_success "Bitwarden is authenticated."
+log_success "Bitwarden is ready."
