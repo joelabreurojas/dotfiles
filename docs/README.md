@@ -16,7 +16,7 @@
 </p>
 
 <h6 align='center'>
-    <a href="/LICENSE">
+    <a href="/docs/LICENSE">
         <img alt='MIT License' src='https://img.shields.io/static/v1.svg?label=License&message=MIT&logoColor=d9e0ee&colorA=302d41&colorB=3094FF'/>
     </a>
     <a href="https://deepwiki.com/joelabreurojas/dotfiles">
