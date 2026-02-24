@@ -1,7 +1,7 @@
 {{- if eq .chezmoi.os "windows" -}}
 {{ template "pwsh_loggers" . }}
 
-$FontFolder = "$HOME\AppData\Local\Microsoft\Windows\Fonts"
+$FontFolder = Join-Path $HOME "AppData\Local\Microsoft\Windows\Fonts"
 $RegPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
 
 if (-not (Test-Path $FontFolder)) {
@@ -14,11 +14,18 @@ Log-Working "Registering fonts in Windows Registry..."
 $Fonts = Get-ChildItem -Path $FontFolder -Include *.ttf, *.otf -Recurse
 
 foreach ($Font in $Fonts) {
-    $ValueName = "$($Font.BaseName) (TrueType)"
+    $Type = if ($Font.Extension -eq '.otf') { "OpenType" } else { "TrueType" }
+    $ValueName = "$($Font.BaseName) ($Type)"
     
-    if (-not (Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue)) {
+    $Existing = Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue
+    
+    if ($null -eq $Existing) {
         Log-Info "Registering: $($Font.Name)"
-        New-ItemProperty -Path $RegPath -Name $ValueName -Value $Font.Name -PropertyType String | Out-Null
+        try {
+            New-ItemProperty -Path $RegPath -Name $ValueName -Value $Font.Name -PropertyType String -ErrorAction Stop | Out-Null
+        } catch {
+            Log-Error "Failed to register $($Font.Name): $($_.Exception.Message)"
+        }
     }
 }
 
