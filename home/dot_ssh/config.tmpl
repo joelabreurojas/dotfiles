@@ -1,15 +1,15 @@
-{{- if ne .environment "minimal" -}}
+{{- if hasKey .ssh_keys "personal" }}
 Host github.com
     HostName github.com
     User git
-    IdentityFile ~/.ssh/{{ index .ssh_keys 0 }}
-{{- end -}}
+    IdentityFile ~/.ssh/{{ .ssh_keys.personal }}
+{{- end }}
 
-{{- if eq .environment "work" -}}
+{{- if hasKey .ssh_keys "work" }}
 Host github.com-work
     HostName ssh.github.com
     User git
     AddKeysToAgent yes
-    IdentityFile ~/.ssh/{{ index .ssh_keys 1 }}
     Port 443
-{{- end -}}
+    IdentityFile ~/.ssh/{{ .ssh_keys.work }}
+{{- end }}

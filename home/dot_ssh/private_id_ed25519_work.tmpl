@@ -1,3 +1,3 @@
-{{- if eq .environment "work" -}}
-{{ (bitwarden "item" (index .ssh_keys 1)).notes }}
+{{- if hasKey .ssh_keys "work" -}}
+{{ (bitwarden "item" .ssh_keys.work).notes }}
 {{- end -}}

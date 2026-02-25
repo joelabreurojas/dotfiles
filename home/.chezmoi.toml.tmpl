@@ -17,11 +17,12 @@
 {{- $profiles := dict "personal" (dict "username" "joelabreurojas" "email" "joelabreurojas@gmail.com") "work" (dict "username" "JAR-Transmandu" "email" "jabreu@transmandu.com") -}}
 {{- $currentProfile := index $profiles $environment | default (index $profiles "personal") -}}
 
-{{- $ssh_keys := list -}}
-{{- if eq $environment "personal" -}}
-{{-     $ssh_keys = list "id_ed25519" -}}
-{{- else if eq $environment "work" -}}
-{{-     $ssh_keys = list "id_ed25519" "id_ed25519_work" -}}
+{{- $ssh_keys := dict -}}
+{{- if ne $environment "minimal" -}}
+  {{- $_ := set $ssh_keys "personal" "id_ed25519" -}}
+  {{- if eq $environment "work" -}}
+    {{- $_ := set $ssh_keys "work" "id_ed25519_work" -}}
+  {{- end -}}
 {{- end -}}
 
 [data]

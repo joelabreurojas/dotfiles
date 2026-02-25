@@ -1,3 +1,3 @@
-{{- if ne .environment "minimal" -}}
-{{ (bitwarden "item" (index .ssh_keys 0)).notes }}
+{{- if hasKey .ssh_keys "personal" -}}
+{{ (bitwarden "item" .ssh_keys.personal).notes }}
 {{- end -}}
