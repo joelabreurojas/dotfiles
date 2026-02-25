@@ -1,13 +1,12 @@
 {{ template "pwsh_loggers" . }}
 
-Log-Work "Verifying environment for: {{ .name }}"
-Log-Info "Profile:  {{ .profile }}"
-Log-Info "Email:    {{ .email }}"
-Log-Info "OS ID:    {{ .os_id }}"
+Log-Work "Sanity check for: {{ .os_id }}"
 Log-Info "Headless: {{ .is_headless }}"
+Log-Info "Username: {{ .username }}"
+Log-Info "Email:    {{ .email }}"
 
-{{ if eq .profile "minimal" -}}
-Log-Info "Minimal profile detected. No secrets will be synced."
+{{ if eq .environment "minimal" -}}
+Log-Info "Minimal environment detected. No secrets will be synced."
 {{- else -}}
-Log-Info "Trusted profile detected ({{ .profile }}). Ready for full setup."
+Log-Info "Trusted environment detected ({{ .environment }}). Ready for full setup."
 {{- end }}

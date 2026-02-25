@@ -1,16 +1,18 @@
-{{- if eq .profile "work" }}
+{{- if eq .environment "work" -}}
 [".config/nvim"]
     type = "archive"
     url = "https://github.com/Ayamir/nvimdots/archive/refs/heads/main.tar.gz"
     exact = true
     stripComponents = 1
     refreshPeriod = "168h"
+    exclude = ["lua/user/**"]
 
 [".config/nvim/lua/user"]
     type = "git-repo"
     url = "https://github.com/joelabreurojas/nvimdots-user.git"
     refreshPeriod = "168h"
-{{- else }}
+
+{{ else -}}
 [".config/nvim"]
     type = "archive"
     url = "https://github.com/LazyVim/starter/archive/refs/heads/main.tar.gz"

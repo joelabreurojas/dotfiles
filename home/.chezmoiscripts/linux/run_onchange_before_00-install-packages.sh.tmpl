@@ -1,16 +1,16 @@
 #!/bin/bash
-{{ template "bash_loggers" . }}
 # packages hash: {{ .packages.linux | toJson | sha256sum }}
 
+{{ template "bash_loggers" . }}
 set -euo pipefail
 
 {{ $packages := .packages.linux -}}
 {{ $sudo := (eq .chezmoi.username "root" | ternary "" "sudo ") -}}
 
-log_working "Installing system packages (apt)..."
+log_working "Syncing system packages (apt)..."
 export DEBIAN_FRONTEND=noninteractive
 
 {{ $sudo }}apt-get update -qq
 {{ $sudo }}apt-get install -y -qq {{ $packages | join " " }} > /dev/null
 
-log_success "System packages installed."
+log_success "System packages sync complete."

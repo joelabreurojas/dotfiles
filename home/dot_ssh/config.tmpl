@@ -1,11 +1,11 @@
-{{- if ne .profile "minimal" -}}
+{{- if ne .environment "minimal" -}}
 Host github.com
     HostName github.com
     User git
     IdentityFile ~/.ssh/{{ index .ssh_keys 0 }}
 {{- end -}}
 
-{{- if eq .profile "work" -}}
+{{- if eq .environment "work" -}}
 Host github.com-work
     HostName ssh.github.com
     User git

@@ -4,36 +4,33 @@
 {{- end -}}
 
 {{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (not (not (stat "/.dockerenv"))) -}}
-
 {{- $isWSL := (and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft")) -}}
-
 {{- $isHeadless := or $isRemote $isWSL -}}
 
-{{- $profile := "minimal" -}}
+{{- $environment := "minimal" -}}
 {{- if eq .chezmoi.hostname "PC-0024" -}}
-{{-     $profile = "work" -}}
-{{- else if (not $isRemote) -}}
-{{-     $profile = "personal" -}}
+{{-     $environment = "work" -}}
+{{- else if not $isRemote -}}
+{{-     $environment = "personal" -}}
 {{- end -}}
 
-{{- $username := eq $profile "work" | ternary "JAR-Transmandu" "joelabreurojas" -}}
-
-{{- $email := eq $profile "work" | ternary "jabreu@transmandu.com" "joelabreurojas@gmail.com" -}}
+{{- $profiles := dict "personal" (dict "username" "joelabreurojas" "email" "joelabreurojas@gmail.com") "work" (dict "username" "JAR-Transmandu" "email" "jabreu@transmandu.com") -}}
+{{- $currentProfile := index $profiles $environment | default (index $profiles "personal") -}}
 
 {{- $ssh_keys := list -}}
-{{- if eq $profile "personal" -}}
+{{- if eq $environment "personal" -}}
 {{-     $ssh_keys = list "id_ed25519" -}}
-{{- else if eq $profile "work" -}}
+{{- else if eq $environment "work" -}}
 {{-     $ssh_keys = list "id_ed25519" "id_ed25519_work" -}}
 {{- end -}}
 
 [data]
     os_id = {{ $osID | quote }}
     is_headless = {{ $isHeadless }}
-    profile = {{ $profile | quote }}
+    environment = {{ $environment | quote }}
     name = "Joel Abreu Rojas"
-    username = {{ $username | quote }}
-    email = {{ $email | quote }}
+    username = {{ $currentProfile.username | quote }}
+    email = {{ $currentProfile.email | quote }}
     ssh_keys = {{ $ssh_keys | toJson }}
 
 [data.packages]
@@ -48,16 +45,16 @@
 
 [bitwarden]
     command = "bw"
-    {{ if eq $profile "personal" }}unlock = "auto"{{ end }}
+    {{ if eq $environment "personal" -}}unlock = "auto"{{- end }}
 
 [edit]
     apply = true
 
 [git]
-    autoCommit = {{ ne $profile "minimal" }}
-    autoPush = {{ eq $profile "personal" }}
+    autoCommit = {{ ne $environment "minimal" }}
+    autoPush = {{ eq $environment "personal" }}
 
-{{- if eq .chezmoi.os "windows" -}}
+{{ if eq .chezmoi.os "windows" -}}
 [interpreters.ps1]
     command = "pwsh"
     args = ["-NoLogo"]

@@ -1,5 +1,7 @@
-{{ template "pwsh_loggers" . -}}
 # packages hash: {{ .packages.windows | toJson | sha256sum }}
+
+{{ template "pwsh_loggers" . }}
+$ErrorActionPreference = "Stop"
 
 {{ $packages := .packages.windows -}}
 $packages = @(

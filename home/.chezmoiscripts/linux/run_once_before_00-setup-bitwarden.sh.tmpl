@@ -1,9 +1,9 @@
 #!/bin/bash
-{{- template "bash_loggers" . -}}
+{{ template "bash_loggers" . }}
 set -euo pipefail
 
-{{- if eq .profile "minimal" -}}
-log_info "Minimal profile detected. Skipping Bitwarden setup."
+{{- if eq .environment "minimal" }}
+log_info "Minimal environment detected. Skipping Bitwarden setup."
 exit 0
 {{- end }}
 
@@ -18,7 +18,7 @@ if [[ "$STATUS" == "unauthenticated" || "$STATUS" == "locked" ]]; then
     log_info "Bitwarden is $STATUS."
 
     {{- if .is_headless }}
-    log_error "Cannot interactively resolve in headless environment."
+    log_error "Cannot interactively resolve in headless mode."
     exit 1
     {{- end }}
 

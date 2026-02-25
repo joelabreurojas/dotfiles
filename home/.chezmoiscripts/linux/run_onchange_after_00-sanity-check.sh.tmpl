@@ -1,13 +1,13 @@
 #!/bin/bash
 {{ template "bash_loggers" . }}
 
-log_work "Environment Check for {{ .name }}"
-log_info "Profile:  {{ .profile }}"
-log_info "Email:    {{ .email }}"
+log_work "Sanity check for {{ .os_id }}"
 log_info "Headless: {{ .is_headless }}"
+log_info "Username: {{ .username }}"
+log_info "Email:    {{ .email }}"
 
-{{ if eq .profile "minimal" -}}
-log_info "Minimal profile detected. No secrets will be synced."
+{{ if eq .environment "minimal" -}}
+log_info "Minimal environment detected. No secrets will be synced."
 {{- else -}}
-log_info "Trusted profile detected ({{ .profile }}). Ready for full setup."
+log_info "Trusted environment detected ({{ .environment }}). Ready for full setup."
 {{- end }}

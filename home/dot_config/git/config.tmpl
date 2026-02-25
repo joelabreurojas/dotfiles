@@ -62,12 +62,12 @@
     wip = "!f() { git add -A && git commit -m \"wip: ${1:-work in progress}\"; }; f"
     where = branch -vv
 
-{{ if eq .profile "work" -}}
+{{ if eq .environment "work" -}}
 [includeIf "gitdir:**/work/**"]
     path = ~/.config/git/config_work
 {{- end }}
 
-{{ if ne .profile "minimal" -}}
+{{ if ne .environment "minimal" -}}
 [credential]
     helper = {{ eq .chezmoi.os "windows" | ternary "manager" "cache --timeout=3600" }}
 {{- end }}
