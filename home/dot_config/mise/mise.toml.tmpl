@@ -15,9 +15,7 @@ lazygit = "latest"
 lsd = "latest"
 neovim = "latest"
 node = "latest"
-"npm:windows-terminal" = { version = "latest", os = ["windows"] }
 opencode = "latest"
-powershell = { version = "latest", os = ["windows"] }
 ripgrep = "latest"
 rust = "latest"
 starship = "latest"
@@ -25,6 +23,11 @@ tree-sitter = "latest"
 usage = "latest"
 zellij = "latest"
 zoxide = "latest"
+
+{{ if eq .chezmoi.os "windows" -}}
+"npm:windows-terminal" = "latest"
+powershell = "latest"
+{{- end }}
 
 [settings]
 experimental = true
