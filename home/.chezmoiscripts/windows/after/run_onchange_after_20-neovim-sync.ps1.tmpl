@@ -1,0 +1,14 @@
+# nvim config hash: {{ include "dot_config/nvim/init.lua" | sha256sum }}
+{{ template "pwsh_loggers" . }}
+$ErrorActionPreference = "Stop"
+
+$MiseDir = Join-Path $Home ".local\bin"
+if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
+
+if (Get-Command nvim -ErrorAction SilentlyContinue) {
+    Log-Working "Syncing neovim plugins (lazy)..."
+    & nvim --headless "+Lazy! sync" +qa
+    Log-Success "Neovim plugins updated."
+} else {
+    Log-Info "Neovim not found. Skipping plugin sync."
+}

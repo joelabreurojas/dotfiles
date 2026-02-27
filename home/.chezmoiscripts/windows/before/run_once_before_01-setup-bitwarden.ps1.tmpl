@@ -1,0 +1,45 @@
+{{ template "pwsh_loggers" . }}
+$ErrorActionPreference = "Stop"
+
+{{- if eq .environment "minimal" }}
+Log-Info "Minimal environment detected. Skipping Bitwarden setup."
+exit 0
+{{- end }}
+
+$MiseDir = Join-Path $Home ".local\bin"
+if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
+
+try {
+    $statusJson = & bw status | ConvertFrom-Json
+    $status = $statusJson.status
+} catch {
+    Log-Error "Bitwarden CLI not found or not responding."
+    exit 1
+}
+
+if ($status -eq "unauthenticated" -or $status -eq "locked") {
+    Log-Info "Bitwarden is $status."
+
+    {{- if .is_headless }}
+    Log-Error "Cannot interactively resolve in headless mode."
+    exit 1
+    {{- end }}
+
+    if ($status -eq "unauthenticated") {
+        & bw login
+        $status = (& bw status | ConvertFrom-Json).status
+    }
+
+    if ($status -eq "locked") {
+        Log-Working "Unlocking vault..."
+        $sessionKey = & bw unlock --raw
+        
+        $env:BW_SESSION = $sessionKey
+        
+        [Environment]::SetEnvironmentVariable("BW_SESSION", $sessionKey, "User")
+        
+        Log-Success "Vault unlocked and BW_SESSION persisted to User environment."
+    }
+}
+
+Log-Success "Bitwarden is ready."

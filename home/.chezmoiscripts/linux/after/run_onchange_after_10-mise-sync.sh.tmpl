@@ -1,0 +1,19 @@
+#!/bin/bash
+# mise.toml hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
+{{- if stat (joinPath .chezmoi.sourceDir "dot_config/mise/mise.lock") }}
+# mise.lock hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+{{- end }}
+
+{{ template "bash_loggers" . }}
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v mise >/dev/null; then
+    log_working "Syncing mise runtimes..."
+    mise install -y
+    log_success "Mise runtimes are synced and pinned."
+else
+    log_error "Mise binary not found. Check .chezmoiexternals setup."
+    exit 1
+fi

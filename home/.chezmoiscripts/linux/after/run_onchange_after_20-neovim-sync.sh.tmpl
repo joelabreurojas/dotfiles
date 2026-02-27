@@ -1,0 +1,14 @@
+#!/bin/bash
+# nvim config hash: {{ include "dot_config/nvim/init.lua" | sha256sum }}
+{{ template "bash_loggers" . }}
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v nvim >/dev/null; then
+    log_working "Syncing neovim plugins (lazy)..."
+    nvim --headless "+Lazy! sync" +qa
+    log_success "Neovim plugins updated."
+else
+    log_info "Neovim not found. Skipping plugin sync."
+fi

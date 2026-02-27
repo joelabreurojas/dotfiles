@@ -1,0 +1,18 @@
+# mise.toml hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
+{{- if stat (joinPath .chezmoi.sourceDir "dot_config/mise/mise.lock") }}
+# mise.lock hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
+{{- end }}
+
+{{ template "pwsh_loggers" . }}
+$ErrorActionPreference = "Stop"
+
+$MiseDir = Join-Path $Home ".local\bin"
+if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
+
+if (Get-Command mise -ErrorAction SilentlyContinue) {
+    Log-Working "Syncing mise runtimes..."
+    & mise install -y
+    Log-Success "Mise runtimes are synced and pinned."
+} else {
+    Log-Error "Mise binary not found. Check .chezmoiexternals setup."
+}
