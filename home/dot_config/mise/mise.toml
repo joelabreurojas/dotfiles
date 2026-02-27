@@ -1,9 +1,33 @@
 [tools]
+bat = "latest"
+btop = "latest"
+cargo = "latest"
+chezmoi = "latest"
+cmake = "latest"
+doggo = "latest"
+fd = "latest"
+fzf = "latest"
+github-cli = "latest"
+go = "latest"
+lazygit = "latest"
+lsd = "latest"
+neovim = "latest"
 node = "latest"
+"npm:windows-terminal" = { version = "latest", os = ["windows"] }
+opencode = "latest"
+powershell = { version = "latest", os = ["windows"] }
+ripgrep = "latest"
 rust = "latest"
-python = "latest"
+starship = "latest"
+tree-sitter = "latest"
 usage = "latest"
+zellij = "latest"
+zoxide = "latest"
 
 [settings]
-autoinstall = true
+experimental = true
 lockfile = true
+pin = true
+
+[env]
+OPENCODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS = "240000"
