@@ -1,17 +1,17 @@
 **/.gitkeep
 
 {{ if ne .chezmoi.os "windows" }}
-AppData/
-Documents/
+AppData/**
+Documents/**
 .chezmoiscripts/windows/
 {{- end }}
 
 {{ if ne .chezmoi.os "linux" }}
 .bashrc
 .zshrc
-.config/mpd/
-.config/lxqt/
-.chezmoiscripts/linux/
+.config/mpd/**
+.config/lxqt/**
+.chezmoiscripts/linux/**
 {{- end }}
 
 {{ if ne .environment "work" -}}
