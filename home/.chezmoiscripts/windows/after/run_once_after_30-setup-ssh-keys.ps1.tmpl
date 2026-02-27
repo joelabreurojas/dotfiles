@@ -1,0 +1,28 @@
+{{ template "pwsh_setup" . }}
+
+{{- if eq .profile "minimal" }}
+exit 0
+{{- end }}
+
+$sshDir = Join-Path $HOME ".ssh"
+if (-not (Test-Path $sshDir)) {
+    New-Item -Path $sshDir -ItemType Directory
+}
+
+Log-Working "Deploying SSH Private Keys from Bitwarden..."
+
+function Save-SshKey ($Name, $VaultName) {
+    $target = Join-Path $sshDir $Name
+    $keyContent = & bw get item $VaultName | ConvertFrom-Json | Select-Object -ExpandProperty notes
+    
+    [System.IO.File]::WriteAllText($target, $keyContent)
+    
+    icacls $target /inheritance:r /grant:("${env:USERNAME}:(R,W)")
+    Log-Success "Deployed $Name"
+}
+
+Save-SshKey "id_ed25519" "SSH_KEY_PERSONAL"
+
+{{ if eq .profile "work" -}}
+Save-SshKey "id_ed25519_work" "SSH_KEY_WORK"
+{{- end }}

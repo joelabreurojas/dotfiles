@@ -1,3 +1,0 @@
-{{- if hasKey .ssh_keys "personal" -}}
-{{ (bitwarden "item" .ssh_keys.personal).notes }}
-{{- end -}}

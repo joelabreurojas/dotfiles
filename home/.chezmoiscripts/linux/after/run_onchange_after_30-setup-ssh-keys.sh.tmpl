@@ -1,0 +1,20 @@
+#!/bin/bash
+{{ template "bash_setup" . }}
+
+{{- if eq .profile "minimal" }}
+exit 0
+{{- end }}
+
+export BW_SESSION=$(bw unlock --raw)
+
+log_working "Deploying SSH Private Keys from Bitwarden..."
+
+bw get item "SSH_KEY_PERSONAL" | jq -r '.notes' > "$HOME/.ssh/id_ed25519"
+chmod 600 "$HOME/.ssh/id_ed25519"
+
+{{ if eq .profile "work" -}}
+bw get item "SSH_KEY_WORK" | jq -r '.notes' > "$HOME/.ssh/id_ed25519_work"
+chmod 600 "$HOME/.ssh/id_ed25519_work"
+{{- end }}
+
+log_success "SSH Keys deployed."

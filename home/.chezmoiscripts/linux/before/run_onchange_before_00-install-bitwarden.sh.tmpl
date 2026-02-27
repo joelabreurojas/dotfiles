@@ -1,7 +1,0 @@
-#!/bin/bash
-{{ template "bash_setup" . }}
-set -euo pipefail
-
-log_working "Installing Bitwarden CLI and JQ..."
-mise use -g -q bitwarden-cli jq
-log_success "Bitwarden CLI and JQ installed."

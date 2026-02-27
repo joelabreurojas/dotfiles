@@ -1,6 +1,0 @@
-{{ template "pwsh_setup" . }}
-$ErrorActionPreference = "Stop"
-
-Log-Working "Installing Bitwarden CLI and JQ..."
-& mise use -g -q bitwarden-cli jq
-Log-Success "Bitwarden CLI and JQ installed."

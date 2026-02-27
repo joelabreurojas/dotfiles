@@ -7,5 +7,9 @@ chezmoi.db
 .DS_Store
 Thumbs.db
 
+# SSH Keys
+home/dot_ssh/id_ed25519
+home/dot_ssh/id_ed25519.pub
+
 # Other
 *.tmp
