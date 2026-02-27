@@ -1,7 +1,7 @@
 #!/bin/bash
 {{ template "bash_setup" . }}
 
-{{- if eq .profile "minimal" }}
+{{- if eq .environment "minimal" }}
 exit 0
 {{- end }}
 
