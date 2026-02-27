@@ -3,7 +3,8 @@
 {{ if ne .chezmoi.os "windows" }}
 AppData/**
 Documents/**
-.chezmoiscripts/windows/
+.chezmoiscripts/windows/**
+symlink_AppData_Local_nvim
 {{- end }}
 
 {{ if ne .chezmoi.os "linux" }}
@@ -15,5 +16,5 @@ Documents/**
 {{- end }}
 
 {{ if ne .environment "work" -}}
-.config/git/config_work.tmpl
+.config/git/config_work
 {{- end }}

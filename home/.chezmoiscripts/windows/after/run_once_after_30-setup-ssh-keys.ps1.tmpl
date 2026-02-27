@@ -23,6 +23,6 @@ function Save-SshKey ($Name, $VaultName) {
 
 Save-SshKey "id_ed25519" "SSH_KEY_PERSONAL"
 
-{{ if eq .profile "work" -}}
+{{ if eq .environment "work" -}}
 Save-SshKey "id_ed25519_work" "SSH_KEY_WORK"
 {{- end }}
