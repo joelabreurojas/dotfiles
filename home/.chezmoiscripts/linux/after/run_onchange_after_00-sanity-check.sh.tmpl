@@ -1,7 +1,7 @@
 #!/bin/bash
 {{ template "bash_setup" . }}
 
-log_work "Sanity check for {{ .os_id }}"
+log_working "Sanity check for {{ .os_id }}"
 log_info "Headless: {{ .is_headless }}"
 log_info "Username: {{ .username }}"
 log_info "Email:    {{ .email }}"
