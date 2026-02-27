@@ -35,7 +35,7 @@
     ssh_keys = {{ $ssh_keys | toJson }}
 
 [data.packages]
-    linux = ["build-essential", "unzip", "git"]
+    linux = ["build-essential", "git", "libssl-dev", "pkg-config", "unzip"]
     windows = ["Git.Git"]
 
 [bitwarden]
