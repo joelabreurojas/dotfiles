@@ -3,11 +3,8 @@
 # mise.lock hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
 {{- end }}
 
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_setup" . }}
 $ErrorActionPreference = "Stop"
-
-$MiseDir = Join-Path $Home ".local\bin"
-if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
 
 if (Get-Command mise -ErrorAction SilentlyContinue) {
     Log-Working "Syncing mise runtimes..."

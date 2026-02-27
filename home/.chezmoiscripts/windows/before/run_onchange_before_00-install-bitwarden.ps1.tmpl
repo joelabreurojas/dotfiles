@@ -1,8 +1,5 @@
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_setup" . }}
 $ErrorActionPreference = "Stop"
-
-$MiseDir = Join-Path $Home ".local\bin"
-if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
 
 Log-Working "Installing Bitwarden CLI and JQ..."
 & mise use -g -q bitwarden-cli jq

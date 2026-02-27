@@ -1,6 +1,14 @@
 {{- if not (lookPath "mise") -}}
+    {{- if eq .chezmoi.os "windows" -}}
+[".local/bin"]
+type = "archive"
+url = "https://mise.jdx.dev/mise-latest-{{.chezmoi.os}}-{{.chezmoi.arch}}.zip"
+exact = false
+stripComponents = 0
+    {{- else -}}
 [".local/bin/mise"]
 type = "file"
 executable = true
 url = "https://mise.jdx.dev/mise-latest-{{.chezmoi.os}}-{{.chezmoi.arch}}"
+    {{- end -}}
 {{- end -}}

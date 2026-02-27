@@ -1,5 +1,5 @@
 #!/bin/bash
-{{ template "bash_loggers" . }}
+{{ template "bash_setup" . }}
 set -euo pipefail
 
 {{- if eq .environment "minimal" }}

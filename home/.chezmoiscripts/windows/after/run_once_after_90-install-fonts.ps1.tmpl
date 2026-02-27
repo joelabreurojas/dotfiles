@@ -1,5 +1,5 @@
 {{- if eq .chezmoi.os "windows" -}}
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_setup" . }}
 
 $FontFolder = Join-Path $HOME "AppData\Local\Microsoft\Windows\Fonts"
 $RegPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"

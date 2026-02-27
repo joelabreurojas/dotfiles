@@ -1,13 +1,10 @@
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_setup" . }}
 $ErrorActionPreference = "Stop"
 
 {{- if eq .environment "minimal" }}
 Log-Info "Minimal environment detected. Skipping Bitwarden setup."
 exit 0
 {{- end }}
-
-$MiseDir = Join-Path $Home ".local\bin"
-if ($env:Path -notlike "*$MiseDir*") { $env:Path = "$MiseDir;$env:Path" }
 
 try {
     $statusJson = & bw status | ConvertFrom-Json

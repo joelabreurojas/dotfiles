@@ -1,0 +1,6 @@
+$ErrorActionPreference = "Stop"
+$MiseBin = "$HOME\.local\bin"
+if ($env:PATH -split ';' -notcontains $MiseBin) {
+    $env:PATH = "$MiseBin;$env:PATH"
+}
+{{ template "pwsh_loggers" . }}

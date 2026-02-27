@@ -1,5 +1,5 @@
 {{- if eq .chezmoi.os "windows" -}}
-{{ template "pwsh_loggers" . }}
+{{ template "pwsh_setup" . }}
 
 Log-Working "Configuring Windows SSH Agent Service..."
 $sshAgent = Get-Service -Name ssh-agent -ErrorAction SilentlyContinue
