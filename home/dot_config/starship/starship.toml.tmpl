@@ -1,0 +1,44 @@
+# Starship prompt — Omarchy, Everforest Dark Soft
+# Palette: https://github.com/sainnhe/everforest
+
+palette = "everforest"
+format = "$username$hostname$directory$git_branch$git_status$cmd_duration$line_break$character"
+
+[palettes.everforest]
+bg = "#2d353b"
+bg_dim = "#252c32"
+fg = "#d3c6aa"
+red = "#e67e80"
+green = "#a7c080"
+yellow = "#dbbc7f"
+blue = "#7fbbb3"
+magenta = "#d699b6"
+cyan = "#83c092"
+orange = "#e69875"
+gray = "#859289"
+
+[username]
+show_always = false
+style_user = "bold fg"
+style_root = "bold red"
+
+[hostname]
+ssh_only = true
+style = "bold fg"
+
+[directory]
+style = "bold blue"
+
+[git_branch]
+style = "bold magenta"
+
+[git_status]
+style = "bold orange"
+
+[cmd_duration]
+min_time = 2000
+style = "yellow"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
