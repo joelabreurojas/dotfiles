@@ -19,9 +19,9 @@ opencode = "latest"
 ripgrep = "latest"
 rust = "latest"
 starship = "latest"
-tree-sitter = "latest"
+{{ if ne .chezmoi.os "windows" }}tmux = "latest"{{ end }}
+# tree-sitter = "latest"  # tree-sitter-cli ships with Omarchy tooling; not managed via mise
 usage = "latest"
-zellij = "latest"
 zoxide = "latest"
 
 {{ if eq .chezmoi.os "windows" -}}
