@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/FlowLauncher"]
+    type = "git-repo"
+    url = "https://github.com/AmNasyse/flow-launcher-everforest.git"
+    refreshPeriod = "168h"
+{{- end }}

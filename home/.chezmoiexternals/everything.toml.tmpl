@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/Everything"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/AmNasyse/everything-everforest/main/Everything.ini"
+    refreshPeriod = "168h"
+{{- end }}

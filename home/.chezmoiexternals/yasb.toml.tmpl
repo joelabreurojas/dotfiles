@@ -1,0 +1,11 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/yasb"]
+    type = "git-repo"
+    url = "https://github.com/AmNasyse/yasb-everforest.git"
+    refreshPeriod = "168h"
+
+["AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/yasb.lnk"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/AmNasyse/yasb-everforest/main/yasb.lnk"
+    refreshPeriod = "168h"
+{{- end }}
