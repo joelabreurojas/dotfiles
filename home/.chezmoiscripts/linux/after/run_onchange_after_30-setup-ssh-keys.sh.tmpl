@@ -1,4 +1,5 @@
 #!/bin/bash
+# ssh-keys hash: {{ .environment | sha256sum }}
 {{ template "bash_setup" . }}
 
 {{- if eq .environment "minimal" }}
