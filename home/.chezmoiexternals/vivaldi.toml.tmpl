@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/vivaldi"]
+    type = "git-repo"
+    url = "https://github.com/AmNasyse/vivaldi-everforest.git"
+    refreshPeriod = "168h"
+{{- end }}
