@@ -1,0 +1,11 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/komorebi"]
+    type = "git-repo"
+    url = "https://github.com/AmNasyse/komorebi-everforest.git"
+    refreshPeriod = "168h"
+
+["AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/komorebi.lnk"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/AmNasyse/komorebi-everforest/main/komorebi.lnk"
+    refreshPeriod = "168h"
+{{- end }}
