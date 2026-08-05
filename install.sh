@@ -10,7 +10,7 @@ if command -v chezmoi >/dev/null; then
 fi
 
 if command -v mise >/dev/null; then
-	mise use -g -q && chezmoi init --apply --branch="$BRANCH" $SOURCE
+	mise use -g -q chezmoi && chezmoi init --apply --branch="$BRANCH" $SOURCE
 	exit 0
 fi
 
