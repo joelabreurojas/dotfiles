@@ -1,5 +1,5 @@
 #!/bin/bash
-# mise.toml hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
+# mise.toml hash: {{ include "dot_config/mise/mise.toml.tmpl" | sha256sum }}
 {{- if stat (joinPath .chezmoi.sourceDir "dot_config/mise/mise.lock") }}
 # mise.lock hash: {{ include "dot_config/mise/mise.lock" | sha256sum }}
 {{- end }}
