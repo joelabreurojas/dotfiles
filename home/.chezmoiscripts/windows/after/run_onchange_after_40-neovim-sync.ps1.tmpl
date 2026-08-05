@@ -1,4 +1,4 @@
-# mise.toml hash: {{ include "dot_config/mise/mise.toml" | sha256sum }}
+# mise.toml hash: {{ include "dot_config/mise/mise.toml.tmpl" | sha256sum }}
 {{ template "pwsh_setup" . }}
 $ErrorActionPreference = "Stop"
 
