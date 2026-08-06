@@ -1,11 +1,10 @@
 {{- if eq .chezmoi.os "windows" -}}
-[".config/yasb"]
-    type = "git-repo"
-    url = "https://github.com/AmNasyse/yasb-everforest.git"
-    refreshPeriod = "168h"
-
-["AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/yasb.lnk"]
+[".config/yasb/config.json"]
     type = "file"
-    url = "https://raw.githubusercontent.com/AmNasyse/yasb-everforest/main/yasb.lnk"
+    url = "https://raw.githubusercontent.com/MrDLingters/Shibumi_YASB/main/Shibumi/config.yaml"
+    refreshPeriod = "168h"
+[".config/yasb/styles.css"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/MrDLingters/Shibumi_YASB/main/Shibumi/styles.css"
     refreshPeriod = "168h"
 {{- end }}
