@@ -1,0 +1,15 @@
+/* Vivaldi — Nord (Omarchy 4.0) */
+:root {
+    --colorAccentBg: #81a1c1;
+    --colorAccentBgFaded: rgba(129, 161, 193, 0.4);
+    --colorAccentBgFadedMore: rgba(129, 161, 193, 0.2);
+    --colorAccentBgDark: #5e81ac;
+    --colorAccentFg: #2e3440;
+    --colorBg: #2e3440;
+    --colorBgDark: #191c23;
+    --colorFg: #d8dee9;
+    --colorFgFaded: #adb5c4;
+    --colorHighlightBg: #81a1c1;
+    --colorHighlightFg: #2e3440;
+    --colorUrlBarBg: #222730;
+}
