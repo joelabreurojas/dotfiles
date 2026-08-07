@@ -32,7 +32,13 @@
     name = "Joel Abreu Rojas"
     username = {{ $currentProfile.username | quote }}
     email = {{ $currentProfile.email | quote }}
-    ssh_keys = {{ $ssh_keys | toJson }}
+
+{{- if gt (len $ssh_keys) 0 }}
+[data.ssh_keys]
+{{- range $k, $v := $ssh_keys }}
+    {{ $k }} = {{ $v | quote }}
+{{- end }}
+{{- end }}
 
 [data.packages]
     linux = ["build-essential", "ca-certificates", "git", "libssl-dev", "openssl", "pkg-config", "unzip"]
