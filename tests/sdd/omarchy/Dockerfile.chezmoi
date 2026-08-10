@@ -1,0 +1,15 @@
+# Pinned chezmoi binary for the ssh_keys regression test's Docker fallback.
+# Public chezmoi docker images are registry-denied/hub-nonexistent, so bake the
+# exact release binary. PIN the base (glibc: the binary needs /lib64/ld-linux)
+# and the chezmoi version.
+# Usage: docker build -t chezmoi-2.72.0:ssh -f Dockerfile.chezmoi .
+FROM python:3.11-slim
+RUN apt-get update -qq && apt-get install -y -qq curl tar && \
+    for i in 1 2 3; do \
+      curl -4 -fsSL --retry 3 --retry-all-errors -o /tmp/cz.tgz \
+        https://github.com/twpayne/chezmoi/releases/latest/download/chezmoi_2.72.0_linux_amd64.tar.gz && break; \
+      sleep 3; \
+    done && \
+    tar -xzf /tmp/cz.tgz -C /usr/local/bin chezmoi && \
+    rm /tmp/cz.tgz
+ENTRYPOINT ["chezmoi"]

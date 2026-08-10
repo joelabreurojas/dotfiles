@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # OMARCHY-SSH-01..04: ssh_keys must render as a valid TOML table, not JSON.
-# Static checks run with no tool deps; live render runs only if chezmoi is present.
+# Static checks run with no tool deps; live render runs if chezmoi or docker is
+# present (docker uses the pinned image built from Dockerfile.chezmoi).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 TPL="$REPO_ROOT/home/.chezmoi.toml.tmpl"
+IMG="chezmoi-2.72.0:ssh"
 PASS=0
 FAIL=0
 
@@ -28,27 +30,29 @@ else
   fail "missing empty-guard or [data.ssh_keys] table block"
 fi
 
-# (c) Live render + parse. Prefer local chezmoi; fall back to a Docker build
-#     that pulls the pinned GitHub release tarball (same source get.chezmoi.io).
+# Live render via chezmoi (or pinned Docker image).
 echo ""
 render_toml() {
+  local src="$1"
   if command -v chezmoi >/dev/null 2>&1; then
-    chezmoi execute-template < "$TPL"
+    chezmoi execute-template < "$src"
   elif command -v docker >/dev/null 2>&1; then
-    # Fallback: ephemeral container builds the exact release binary.
-    docker run --rm -i -v "$REPO_ROOT:/df" -w /df python:3.11-slim bash -c '
-      set -euo pipefail
-      apt-get update -qq >/dev/null 2>&1 && apt-get install -y -qq curl tar >/dev/null 2>&1
-      curl -4 -fsSL -o /tmp/cz.tgz https://github.com/twpayne/chezmoi/releases/latest/download/chezmoi_2.72.0_linux_amd64.tar.gz
-      tar -xzf /tmp/cz.tgz -C /usr/local/bin chezmoi
-      chezmoi execute-template < /df/home/.chezmoi.toml.tmpl
-    ' 2>/dev/null
+    if ! docker image inspect "$IMG" >/dev/null 2>&1; then
+      local df_dir
+      df_dir="$(cd "$(dirname "$0")" && pwd)"
+      docker build -q -t "$IMG" -f "$df_dir/Dockerfile.chezmoi" "$df_dir" >/dev/null 2>&1 || return 2
+    fi
+    docker run --rm -i "$IMG" execute-template < "$src"
   else
     return 2
   fi
 }
 
-if ! render_toml | python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' 2>/dev/null; then
+parse_toml() {
+  python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' 2>/dev/null
+}
+
+if ! render_toml "$TPL" | parse_toml; then
   if command -v chezmoi >/dev/null 2>&1 || command -v docker >/dev/null 2>&1; then
     fail "rendered ssh_keys is invalid TOML"
   else
@@ -58,6 +62,32 @@ if ! render_toml | python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer
   fi
 else
   ok "rendered output parses as valid TOML (OMARCHY-SSH-01/02/03)"
+fi
+
+# (d) Single-key dict must render as exactly one [data.ssh_keys] pair.
+#     Mirrors the committed range block with a 1-entry dict (SSH-01 1-key case).
+single_tpl="$(mktemp)"
+trap 'rm -f "$single_tpl"' EXIT
+cat > "$single_tpl" <<'EOF'
+{{- $ssh_keys := dict -}}
+{{- $_ := set $ssh_keys "personal" "id_ed25519" -}}
+{{- if gt (len $ssh_keys) 0 }}
+[data.ssh_keys]
+{{- range $k, $v := $ssh_keys }}
+    {{ $k }} = {{ $v | quote }}
+{{- end }}
+{{- end }}
+EOF
+
+if render_toml "$single_tpl" | python3 -c '
+import sys, tomllib
+d = tomllib.load(sys.stdin.buffer)
+keys = d["data"]["ssh_keys"]
+assert keys == {"personal": "id_ed25519"}, keys
+' 2>/dev/null; then
+  ok "single-key dict renders exactly one pair (OMARCHY-SSH-01 1-key case)"
+else
+  fail "single-key dict did not render exactly one pair"
 fi
 
 echo ""
