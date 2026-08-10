@@ -32,14 +32,14 @@ done
 # --- run_onchange scripts must have a hash comment for gating ---
 echo ""
 echo "run_onchange scripts (hash comment for gating):"
-find "$REPO_ROOT"/home/.chezmoiscripts -name '*run_onchange*' -type f 2>/dev/null | while read -r script; do
+while read -r script; do
   name="$(basename "$script")"
   if head -20 "$script" | grep -qiE 'hash|sha256|md5|#.*run_onchange'; then
     ok "$name has hash comment"
   else
     fail "$name missing hash comment (run_onchange will re-run on every apply)"
   fi
-done
+done < <(find "$REPO_ROOT"/home/.chezmoiscripts -name '*run_onchange*' -type f 2>/dev/null)
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

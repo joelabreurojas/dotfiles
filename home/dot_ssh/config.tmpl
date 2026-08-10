@@ -1,11 +1,11 @@
-{{- if hasKey .ssh_keys "personal" }}
+{{- if and (hasKey $ "ssh_keys") (hasKey .ssh_keys "personal") }}
 Host github.com
     HostName github.com
     User git
     IdentityFile ~/.ssh/{{ .ssh_keys.personal }}
 {{- end }}
 
-{{- if hasKey .ssh_keys "work" }}
+{{- if and (hasKey $ "ssh_keys") (hasKey .ssh_keys "work") }}
 Host github.com-work
     HostName ssh.github.com
     User git

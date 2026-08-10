@@ -60,7 +60,7 @@ render_check() {
     [ "$rc" -eq 2 ] && return 2
     return 1
   fi
-  if python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' < "$out" 2>/dev/null; then
+  if python3 -c 'import tomllib' >/dev/null 2>&1 && python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' < "$out" 2>/dev/null; then
     cat "$out"
     rm -f "$out"
     return 0
