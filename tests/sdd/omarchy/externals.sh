@@ -12,13 +12,17 @@ fail() { FAIL=$((FAIL + 1)); echo "  ✗ $1"; }
 
 echo "=== Externals Cache Tests ==="
 
-# --- refreshPeriod: every external must have it to avoid re-download ---
+# --- refreshPeriod: every external that downloads must have it ---
+# Placeholders (no `url` key, e.g. only a comment) download nothing, so they
+# need no refreshPeriod.
 echo ""
 echo "refreshPeriod (no re-download on repeat apply):"
 for f in "$REPO_ROOT"/home/.chezmoiexternals/*.toml.tmpl; do
   [ -f "$f" ] || { fail "No externals found in home/.chezmoiexternals/"; break; }
   name="$(basename "$f")"
-  if grep -q 'refreshPeriod' "$f"; then
+  if ! grep -qE '^\s*url\s*=' "$f"; then
+    ok "$name is a placeholder (no url, nothing to re-download)"
+  elif grep -q 'refreshPeriod' "$f"; then
     ok "$name has refreshPeriod"
   else
     fail "$name missing refreshPeriod (will re-download every apply)"
