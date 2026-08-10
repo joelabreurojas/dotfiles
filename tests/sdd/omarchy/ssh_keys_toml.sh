@@ -48,20 +48,42 @@ render_toml() {
   fi
 }
 
-parse_toml() {
-  python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' 2>/dev/null
+# render_check: 0 = render+parse OK (prints output) | 2 = backend unavailable
+#              | 1 = render failed | 3 = rendered invalid TOML.
+render_check() {
+  local src="$1" rc out
+  out="$(mktemp)"
+  render_toml "$src" > "$out" 2>/dev/null
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    rm -f "$out"
+    [ "$rc" -eq 2 ] && return 2
+    return 1
+  fi
+  if python3 -c 'import sys,tomllib; tomllib.load(sys.stdin.buffer)' < "$out" 2>/dev/null; then
+    cat "$out"
+    rm -f "$out"
+    return 0
+  fi
+  rm -f "$out"
+  return 3
 }
 
-if ! render_toml "$TPL" | parse_toml; then
-  if command -v chezmoi >/dev/null 2>&1 || command -v docker >/dev/null 2>&1; then
-    fail "rendered ssh_keys is invalid TOML"
-  else
-    echo "  ⚠ neither chezmoi nor docker installed; skipping live TOML parse."
-    [ "$FAIL" -gt 0 ] && exit 1
-    exit 0
-  fi
-else
+render_out=""
+rc=0
+if render_out="$(render_check "$TPL")"; then
   ok "rendered output parses as valid TOML (OMARCHY-SSH-01/02/03)"
+else
+  rc=$?
+  case "$rc" in
+    1) fail "template render failed (chezmoi/docker error)" ;;
+    3) fail "rendered ssh_keys is invalid TOML" ;;
+    2)
+      echo "  ⚠ no render backend available (chezmoi/docker/docker build); skipping live TOML parse."
+      [ "$FAIL" -gt 0 ] && exit 1
+      exit 0
+      ;;
+  esac
 fi
 
 # (d) Single-key dict must render as exactly one [data.ssh_keys] pair.
@@ -79,15 +101,24 @@ cat > "$single_tpl" <<'EOF'
 {{- end }}
 EOF
 
-if render_toml "$single_tpl" | python3 -c '
+if render_out="$(render_check "$single_tpl")"; then
+  if printf '%s' "$render_out" | python3 -c '
 import sys, tomllib
 d = tomllib.load(sys.stdin.buffer)
 keys = d["data"]["ssh_keys"]
 assert keys == {"personal": "id_ed25519"}, keys
 ' 2>/dev/null; then
-  ok "single-key dict renders exactly one pair (OMARCHY-SSH-01 1-key case)"
+    ok "single-key dict renders exactly one pair (OMARCHY-SSH-01 1-key case)"
+  else
+    fail "single-key dict did not render exactly one pair"
+  fi
 else
-  fail "single-key dict did not render exactly one pair"
+  rc=$?
+  case "$rc" in
+    1) fail "single-key render failed (chezmoi/docker error)" ;;
+    3) fail "single-key dict rendered invalid TOML" ;;
+    2) echo "  ⚠ single-key render skipped (no backend available)." ;;
+  esac
 fi
 
 echo ""
