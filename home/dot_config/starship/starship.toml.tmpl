@@ -1,0 +1,44 @@
+# Starship prompt — Omarchy, Nord
+# Palette: https://github.com/nordtheme
+
+palette = "nord"
+format = "$username$hostname$directory$git_branch$git_status$cmd_duration$line_break$character"
+
+[palettes.nord]
+bg = "#2e3440"
+bg_dim = "#222730"
+fg = "#d8dee9"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#88c0d0"
+orange = "#d5967a"
+gray = "#4c566a"
+
+[username]
+show_always = false
+style_user = "bold fg"
+style_root = "bold red"
+
+[hostname]
+ssh_only = true
+style = "bold fg"
+
+[directory]
+style = "bold blue"
+
+[git_branch]
+style = "bold magenta"
+
+[git_status]
+style = "bold orange"
+
+[cmd_duration]
+min_time = 2000
+style = "yellow"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

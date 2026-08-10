@@ -28,9 +28,17 @@
 
 ### 💻 Usage
 
-**Linux (Lubuntu)**
+**Omarchy (Arch Linux)**
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/joelabreurojas/dotfiles/main/install.sh | bash
+```
+
+**WSL (Ubuntu on Windows)**
+
+```bash
+# From PowerShell: wsl --install -d Ubuntu
+# Then inside WSL:
 curl -fsSL https://raw.githubusercontent.com/joelabreurojas/dotfiles/main/install.sh | bash
 ```
 

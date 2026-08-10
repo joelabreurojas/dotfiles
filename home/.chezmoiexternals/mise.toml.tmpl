@@ -5,10 +5,12 @@ type = "archive"
 url = "https://mise.jdx.dev/mise-latest-{{.chezmoi.os}}-{{.chezmoi.arch}}.zip"
 exact = false
 stripComponents = 0
+refreshPeriod = "168h"
     {{- else -}}
 [".local/bin/mise"]
 type = "file"
 executable = true
 url = "https://mise.jdx.dev/mise-latest-{{.chezmoi.os}}-{{.chezmoi.arch}}"
+refreshPeriod = "168h"
     {{- end -}}
 {{- end -}}

@@ -1,0 +1,45 @@
+{{- if eq .chezmoi.os "windows" -}}
+# yasb + komorebi autostart shortcuts (Nord Win11 repos ship no .lnk files)
+{{ template "pwsh_setup" . }}
+
+$startup = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+
+function New-AutoStartShortcut {
+    param(
+        [string]$Name,
+        [string]$ExePath
+    )
+    if (-not (Test-Path $ExePath)) {
+        Log-Working "$Name not found at '$ExePath'. Skipping shortcut."
+        return
+    }
+    $link = Join-Path $startup "$Name.lnk"
+    if (Test-Path $link) {
+        Log-Info "$Name autostart shortcut already present."
+        return
+    }
+    $shell = New-Object -ComObject WScript.Shell
+    $shortcut = $shell.CreateShortcut($link)
+    $shortcut.TargetPath = $ExePath
+    $shortcut.WorkingDirectory = Split-Path $ExePath
+    $shortcut.Save()
+    Log-Success "Created $Name autostart shortcut."
+}
+
+$yasbExe = "$env:LOCALAPPDATA\Programs\yasb\yasb.exe"
+New-AutoStartShortcut -Name "yasb" -ExePath $yasbExe
+
+$komorebiExe = (Get-Command komorebi -ErrorAction SilentlyContinue).Source
+if (-not $komorebiExe) {
+    $candidates = @(
+        "$env:LOCALAPPDATA\Microsoft\WinGet\Links\komorebi.exe",
+        "$env:USERPROFILE\scoop\shims\komorebi.exe"
+    )
+    $komorebiExe = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+}
+if ($komorebiExe) {
+    New-AutoStartShortcut -Name "komorebi" -ExePath $komorebiExe
+} else {
+    Log-Working "komorebi not found on PATH or common install dirs. Skipping shortcut."
+}
+{{- end }}

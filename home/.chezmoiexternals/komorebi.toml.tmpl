@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/komorebi/komorebi.json"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/MrDLingters/NordWin11/main/Komorebi/komorebi.json"
+    refreshPeriod = "168h"
+{{- end }}

@@ -1,4 +1,5 @@
 #!/bin/bash
+# sanity-check hash: {{ .os_id | sha256sum }}
 {{ template "bash_setup" . }}
 
 log_working "Sanity check for {{ .os_id }}"

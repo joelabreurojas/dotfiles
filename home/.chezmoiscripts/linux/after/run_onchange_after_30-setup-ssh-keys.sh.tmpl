@@ -1,4 +1,5 @@
 #!/bin/bash
+# ssh-keys hash: {{ .environment | sha256sum }}
 {{ template "bash_setup" . }}
 
 {{- if eq .environment "minimal" }}
@@ -9,12 +10,18 @@ export BW_SESSION=$(bw unlock --raw)
 
 log_working "Deploying SSH Private Keys from Bitwarden..."
 
-bw get item "SSH_KEY_PERSONAL" | jq -r '.notes' > "$HOME/.ssh/id_ed25519"
-chmod 600 "$HOME/.ssh/id_ed25519"
+SSH_TMP_PERSONAL="$(mktemp)"
+SSH_TMP_WORK="$(mktemp)"
+trap 'rm -f "$SSH_TMP_PERSONAL" "$SSH_TMP_WORK"' EXIT
+
+bw get item "SSH_KEY_PERSONAL" | jq -r '.notes' > "$SSH_TMP_PERSONAL"
+chmod 600 "$SSH_TMP_PERSONAL"
+mv "$SSH_TMP_PERSONAL" "$HOME/.ssh/id_ed25519"
 
 {{ if eq .environment "work" -}}
-bw get item "SSH_KEY_WORK" | jq -r '.notes' > "$HOME/.ssh/id_ed25519_work"
-chmod 600 "$HOME/.ssh/id_ed25519_work"
+bw get item "SSH_KEY_WORK" | jq -r '.notes' > "$SSH_TMP_WORK"
+chmod 600 "$SSH_TMP_WORK"
+mv "$SSH_TMP_WORK" "$HOME/.ssh/id_ed25519_work"
 {{- end }}
 
 log_success "SSH Keys deployed."

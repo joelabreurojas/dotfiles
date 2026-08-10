@@ -3,7 +3,7 @@
 {{-     $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
-{{- $isRemote := or (env "CODESPACES") (env "REMOTE_CONTAINERS") (env "SSH_CONNECTION") (env "KUBERNETES_SERVICE_HOST") (env "container") (not (not (stat "/.dockerenv"))) -}}
+{{- $isRemote := or (env "CODESPACES" | not | not) (env "REMOTE_CONTAINERS" | not | not) (env "SSH_CONNECTION" | not | not) (env "KUBERNETES_SERVICE_HOST" | not | not) (env "container" | not | not) (stat "/.dockerenv" | not | not) -}}
 {{- $isWSL := (and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft")) -}}
 {{- $isHeadless := or $isRemote $isWSL -}}
 
@@ -32,7 +32,13 @@
     name = "Joel Abreu Rojas"
     username = {{ $currentProfile.username | quote }}
     email = {{ $currentProfile.email | quote }}
-    ssh_keys = {{ $ssh_keys | toJson }}
+
+{{- if gt (len $ssh_keys) 0 }}
+[data.ssh_keys]
+{{- range $k, $v := $ssh_keys }}
+    {{ $k }} = {{ $v | quote }}
+{{- end }}
+{{- end }}
 
 [data.packages]
     linux = ["build-essential", "ca-certificates", "git", "libssl-dev", "openssl", "pkg-config", "unzip"]

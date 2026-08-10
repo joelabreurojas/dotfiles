@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/Vencord"]
+    type = "git-repo"
+    url = "https://github.com/orblazer/discord-nordic.git"
+    refreshPeriod = "168h"
+{{- end }}

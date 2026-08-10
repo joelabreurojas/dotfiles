@@ -1,0 +1,10 @@
+{{- if eq .chezmoi.os "windows" -}}
+[".config/yasb/config.json"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/MrDLingters/Shibumi_YASB/main/Shibumi/config.yaml"
+    refreshPeriod = "168h"
+[".config/yasb/styles.css"]
+    type = "file"
+    url = "https://raw.githubusercontent.com/MrDLingters/Shibumi_YASB/main/Shibumi/styles.css"
+    refreshPeriod = "168h"
+{{- end }}

@@ -1,0 +1,36 @@
+{{- if eq .chezmoi.os "windows" -}}
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+    "profiles": {
+        "defaults": {},
+        "list": []
+    },
+    "schemes": [
+        {
+            "name": "Nord",
+            "background": "#2e3440",
+            "foreground": "#d8dee9",
+            "cursorColor": "#d8dee9",
+            "selectionBackground": "#434c5e",
+            "black": "#3b4252",
+            "red": "#bf616a",
+            "green": "#a3be8c",
+            "yellow": "#ebcb8b",
+            "blue": "#81a1c1",
+            "purple": "#b48ead",
+            "cyan": "#88c0d0",
+            "white": "#d8dee9",
+            "brightBlack": "#4c566a",
+            "brightRed": "#bf616a",
+            "brightGreen": "#a3be8c",
+            "brightYellow": "#ebcb8b",
+            "brightBlue": "#81a1c1",
+            "brightPurple": "#b48ead",
+            "brightCyan": "#8fbcbb",
+            "brightWhite": "#d8dee9"
+        }
+    ]
+}
+{{- end }}
