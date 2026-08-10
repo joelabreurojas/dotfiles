@@ -6,7 +6,7 @@
 FROM python:3.11-slim
 RUN apt-get update -qq && apt-get install -y -qq curl tar && \
     for i in 1 2 3; do \
-      curl -4 -fsSL --retry 3 --retry-all-errors -o /tmp/cz.tgz \
+      curl -fsSL --retry 3 --retry-all-errors -o /tmp/cz.tgz \
         https://github.com/twpayne/chezmoi/releases/latest/download/chezmoi_2.72.0_linux_amd64.tar.gz && break; \
       sleep 3; \
     done && \

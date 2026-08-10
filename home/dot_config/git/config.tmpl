@@ -44,6 +44,7 @@
     branch = yellow
 
 [alias]
+    # Renders a colorized "alias -> definition" summary (git aliases).
     aliases = "!git config --get-regexp '^alias\\.' | sed 's/^alias\\.//;s/ / = /' | awk -F ' = ' 'BEGIN {printf \"\\033[34m%-10s %s\\033[0m\\n\", \"COMMAND\", \"DEFINITION\"} {printf \"\\033[33m%-10s\\033[0m %s\\n\", $1, $2}'"
     branches = branch --sort=-committerdate --format='%(color:yellow)%(refname:short)%(color:reset) %(color:green)(%(committerdate:relative))%(color:reset) - %(contents:subject)'
     changes = status -s -b
