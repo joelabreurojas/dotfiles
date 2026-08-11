@@ -1,6 +1,6 @@
 # Roadmap
 
-**Current Logical State**: Proposed
+**Current Logical State**: Accepted
 
 > Living document, reviewed every sprint (or every two weeks). Status flips
 > to `Accepted` when the corresponding PR merges. No module enters technical
