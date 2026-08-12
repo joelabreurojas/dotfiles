@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [omarchy, main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build pinned chezmoi image (test backend)
+        uses: docker/build-push-action@v6
+        with:
+          context: tests/sdd/omarchy
+          file: tests/sdd/omarchy/Dockerfile.chezmoi
+          tags: chezmoi-2.72.0:ssh
+          load: true
+
+      - name: Run ssh_keys TOML rendering tests
+        run: bash tests/sdd/omarchy/ssh_keys_toml.sh
+
+      - name: Run externals cache tests
+        run: bash tests/sdd/omarchy/externals.sh
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run shellcheck on test scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: tests/sdd/omarchy
+          severity: warning
