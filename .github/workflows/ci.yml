@@ -27,6 +27,9 @@ jobs:
       - name: Run ssh_keys TOML rendering tests
         run: bash tests/sdd/omarchy/ssh_keys_toml.sh
 
+      - name: Run per-profile template render tests
+        run: bash tests/sdd/omarchy/profile_renders.sh
+
       - name: Run externals cache tests
         run: bash tests/sdd/omarchy/externals.sh
 
